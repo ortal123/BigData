@@ -8,7 +8,7 @@
 
 library(ggplot2)
 library(lubridate)
-pdf("Week3_power.pdf")
+pdf("Ex1/output/Week3_power.pdf")
 
 
 ######################################### PART ONE
