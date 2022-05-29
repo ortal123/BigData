@@ -221,17 +221,22 @@ DF2$Hour <- factor (dimnames(secondRange)$hour, levels = hourList2)
 DF2$Hour <- as.numeric(DF2$Hour)
 
 # Plot regression lines
-LM1 <- lm( MeanDemand ~ Hour, data = DF1)
+U <- data.matrix(data.frame(ones = rep(1, length(DF1$Hour)), hours = DF1$Hour)) # 5*2
+y <- matrix(DF1$MeanDemand) # 5*1
+coef <- t(U) %*% U
+
+
+LM1 <- lm(MeanDemand ~ Hour, data = DF1)
 print(ggplot(DF1, aes(Hour, MeanDemand), lwd=1, group=1)
       + geom_point(col="blue") 
-      + geom_abline(aes(intercept = coef(LM1)[1], slope = coef(LM1)[2]), lwd=1, show.legend=TRUE, col="gray")
+      + geom_abline(aes(intercept = coef)[1], slope = coef[2]), lwd=1, show.legend=TRUE, col="gray")
       + scale_x_discrete(limits=hourList1) 
       + theme(legend.position = "bottom", panel.background = element_rect(fill = "beige"))
       + geom_line(show.legend = "TRUE", col="skyblue")
       + ggtitle("Power Demand - Day")
       + labs(y="Demand", x="Time"))
 
-LM2 <- lm( MeanDemand ~ Hour, data = DF2)
+LM2 <- lm(MeanDemand ~ Hour, data = DF2)
 print(ggplot(DF2, aes(Hour, MeanDemand), lwd=1, group=1)
       + geom_point(col="blue") 
       + geom_abline(aes(intercept = coef(LM2)[1], slope = coef(LM2)[2]), lwd=1, show.legend=TRUE, col="gray")
