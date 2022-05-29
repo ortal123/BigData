@@ -1,4 +1,5 @@
 
+
 # Big Data - Exercise 1
 # GitHub: https://github.com/JuditHalperin/BigData/tree/main/Ex1
 
