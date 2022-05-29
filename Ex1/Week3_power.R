@@ -15,66 +15,59 @@ library(lubridate)
 pdf("Ex1/output/Week3_power.pdf")
 
 # Read input data
-originalTable <- read.delim('Ex1/data/table.tsv')
+original_table <- read.delim('Ex1/data/table.tsv')
 
 # Add a DateTime column
-originalTable$DateTime <- as.POSIXct(originalTable$megawatthours, tz = "EST", "%H:%M EST %m/%d/%Y")
+original_table$DateTime <- as.POSIXct(original_table$megawatthours, tz = "EST", "%H:%M EST %m/%d/%Y")
 
-# Order the table by date
-orderedTable <- originalTable[ order(originalTable$DateTime), ]
+# Order by date
+ordered_table <- original_table[ order(original_table$DateTime), ]
 
 
 ## Question 1
 
 
 # Set the location dimension
-locationsOnce <- c("BPAT", "CISO", "CPLE", "ERCO", "FPL", "ISNE", "MISO", "NYIS", "PACW", "PJM", "United.States.Lower.48..region.")
+locations_list <- c("BPAT", "CISO", "CPLE", "ERCO", "FPL", "ISNE", "MISO", "NYIS", "PACW", "PJM", "United.States.Lower.48..region.")
 locations <- vector()
-for(j in locationsOnce) {
-  for(i in seq(length(row.names(originalTable)))) {
+for(j in locations_list) {
+  for(i in seq(length(row.names(original_table)))) {
     locations <- c(locations, j)
   }
 }
 
 # Set the time dimension
-times <- rep(orderedTable$DateTime, length(locationsOnce))
+times <- rep(ordered_table$DateTime, length(locations_list))
 
 # Set the net generations
 netgens <- vector()
-for (i in list("Net.generation", "Net.generation.1", "Net.generation.2",
-               "Net.generation.3", "Net.generation.4", "Net.generation.5", 
-               "Net.generation.6", "Net.generation.7", "Net.generation.8",
-               "Net.generation.9", "Net.generation.10")) {
-  netgens <- c(netgens, orderedTable[,i])
+for (i in list("Net.generation", "Net.generation.1", "Net.generation.2", "Net.generation.3", "Net.generation.4", "Net.generation.5", "Net.generation.6", "Net.generation.7", "Net.generation.8", "Net.generation.9", "Net.generation.10")) {
+  netgens <- c(netgens, ordered_table[,i])
 }
 
 # Create data frame
 df <- data.frame(location = locations, time = times, netgen = netgens)
 row.names(df) <- NULL
-sortedDf <- df[order(df$time),]
 
 # Create data cube
-dataCube <-
-  tapply(df$netgen,
-         df[,c("location", "time")],
-         FUN = sum )
+data_cube <- tapply(df$netgen, df[,c("location", "time")], FUN = sum )
 
-# EST -> PDT (-3 hrs):
+# Convert time: EST -> PDT (-3 hrs):
 for (i in c("PACW", "CISO", "BPAT")) {
-  dataCube[i,] <- c(dataCube[i, seq(4, length(colnames(dataCube)))], NA, NA, NA)
+  data_cube[i,] <- c(data_cube[i, seq(4, length(colnames(data_cube)))], NA, NA, NA)
 }
 
-# EST -> CDT (-1 hrs): 
+# Convert time: EST -> CDT (-1 hrs): 
 for (i in c("MISO", "ERCO")) {
-  dataCube[i,] <- c(dataCube[i, seq(2, length(colnames(dataCube)))], NA)
+  data_cube[i,] <- c(data_cube[i, seq(2, length(colnames(data_cube)))], NA)
 }
 
 # Relevant Range (07-02-2021 to 14-02-2021)
 rng <- 720:887
-dataCube <- dataCube[, rng]
+data_cube <- data_cube[, rng]
 
 # Aggregate by day - find the members of each day
-rollup <- cut(as.numeric(as.POSIXct(dimnames(dataCube)$time )),
+rollup <- cut(as.numeric(as.POSIXct(dimnames(data_cube)$time )),
               c(as.numeric(as.POSIXct("2021-02-06 23:00:00 EST")),
                 as.numeric(as.POSIXct("2021-02-07 23:00:00 EST")),
                 as.numeric(as.POSIXct("2021-02-08 23:00:00 EST")),
@@ -85,35 +78,33 @@ rollup <- cut(as.numeric(as.POSIXct(dimnames(dataCube)$time )),
                 as.numeric(as.POSIXct("2021-02-13 23:00:00 EST"))),
               dig.lab = 8)
 
-rollup.group <- split(dimnames(dataCube)$time, rollup)
-n.dayLevels <- length(rollup.group)
+rollup_group <- split(dimnames(data_cube)$time, rollup)
 
-aggregatedCube <- lapply(
-  rollup.group, function(k)
-    apply( dataCube[,k], c("location"), sum, na.rm = T )
+aggregated_cube <- lapply(
+  rollup_group, function(k)
+    apply( data_cube[,k], c("location"), sum, na.rm = T )
 )
-new.dataCube <- dataCube[,1:n.dayLevels]
 
-# Rectify the time dimension name and levels - convert it to the name "day" and apply day values to it
-dimlist <- dimnames(new.dataCube)
+new_data_cube <- data_cube[,1:length(rollup_group)]
+
+dimlist <- dimnames(new_data_cube)
 timecol <- which(names(dimlist) == "time")
 names(dimlist)[timecol] <- "day"
 dimlist$day <- c("2021-02-07", "2021-02-08", "2021-02-09", "2021-02-10", "2021-02-11", "2021-02-12", "2021-02-13")
-dimnames(new.dataCube) <- dimlist
+dimnames(new_data_cube) <- dimlist
 
 # Apply the new values
-for (i in seq(n.dayLevels))
-  new.dataCube[,i] <- aggregatedCube[[i]]
+for (i in seq(length(rollup_group)))
+  new_data_cube[,i] <- aggregated_cube[[i]]
 
 # Calculate the means
 means <- vector()
-
 for ( i in dimlist$day ) {
-  means[[ i ]] <- mean( new.dataCube[,i] )
+  means[[ i ]] <- mean( new_data_cube[,i] )
 }
 
 # Rearrange in a new, temporary dataframe
-DF <- data.frame ( Day = dimlist$day, MeanNetGeneration = means)
+DF <- data.frame(Day = dimlist$day, MeanNetGeneration = means)
 DF$Day <- as.Date(DF$Day)
 
 # Display English dates
@@ -132,10 +123,10 @@ print(ggplot(DF, aes(Day, MeanNetGeneration))
 
 
 # Set the location dimension
-locationsOnce <- c( "CPLE", "FPL", "ISNE","NYIS", "PJM")
+locations_list <- c( "CPLE", "FPL", "ISNE","NYIS", "PJM")
 locations <- vector()
-for(j in locationsOnce) {
-  for(i in seq(length(row.names(originalTable)))) {
+for(j in locations_list) {
+  for(i in seq(length(row.names(original_table)))) {
     locations <- c(locations, j)
   }
 }
@@ -143,57 +134,54 @@ for(j in locationsOnce) {
 # Set the demands
 demands <- vector()
 for (i in list("Demand.2", "Demand.4",  "Demand.5", "Demand.7", "Demand.9")) {
-  demands <- c(demands, orderedTable[,i])
+  demands <- c(demands, ordered_table[,i])
 }
 
 # Set the time dimension
-times <- rep(orderedTable[, 'DateTime'], length(locationsOnce))
+times <- rep(ordered_table[, 'DateTime'], length(locations_list))
 
 # Create data frame
 df <- data.frame(location = locations, time = times, demand = demands)
 row.names(df) <- NULL
 
 # Create data cube
-dataCube <- tapply(df$demand, df[,c("location", "time")], FUN = sum)
+data_cube <- tapply(df$demand, df[,c("location", "time")], FUN = sum)
 
 # Relevant Range (07-02-2021 to 14-02-2021)
 rng <- 720:887
-dataCube <- dataCube[,rng]
+data_cube <- data_cube[,rng]
 
 # Retrieving the required hour
-slicedCube <- dataCube[,(hour(dimnames(dataCube)$time)>=10 & hour(dimnames(dataCube)$time)<=18) |
-                         (hour(dimnames(dataCube)$time)>=20 & hour(dimnames(dataCube)$time)<=23) |
-                         (hour(dimnames(dataCube)$time)>=0 & hour(dimnames(dataCube)$time)<=3)]
+sliced_cube <- data_cube[,(hour(dimnames(data_cube)$time)>=10 & hour(dimnames(data_cube)$time)<=18) |
+                         (hour(dimnames(data_cube)$time)>=20 & hour(dimnames(data_cube)$time)<=23) |
+                         (hour(dimnames(data_cube)$time)>=0 & hour(dimnames(data_cube)$time)<=3)]
 
 # Rollup
-rollup <- cut(hour(dimnames(slicedCube)$time),
+rollup <- cut(hour(dimnames(sliced_cube)$time),
               c(seq(-1, 3), seq(10, 18), seq(20, 23)),
               dig.lab = 17)
 
-rollup.group <- split(dimnames(slicedCube)$time, rollup)
-newSize <- length(rollup.group)
+rollup_group <- split(dimnames(sliced_cube)$time, rollup)
 
 # Aggregate by day
-aggregatedCube <- lapply(
-  rollup.group, function(k)
-    apply( slicedCube[,k], c("location"), sum, na.rm = T )
+aggregated_cube <- lapply(
+  rollup_group, function(k)
+    apply( sliced_cube[,k], c("location"), sum, na.rm = T )
 )
 
-newCube <- slicedCube[,1:newSize]
-for (i in seq(newSize))
-  newCube [,i] <- aggregatedCube[[i]]
+new_cube <- sliced_cube[,1:length(rollup_group)]
+for (i in seq(length(rollup_group)))
+  new_cube [,i] <- aggregated_cube[[i]]
 
-demanddimlist <- dimnames(newCube)
+demanddimlist <- dimnames(new_cube)
 timecol <- which(names(demanddimlist) == "time")
 names(demanddimlist)[timecol] <- "hour"
-demanddimlist$hour <- c("00:00", "01:00", "02:00", "03:00", "10:00", "11:00",
-                        "12:00", "13:00", "14:00", "15:00", "16:00", "17:00",
-                        "18:00", "20:00", "21:00", "22:00", "23:00")
-dimnames(newCube) <- demanddimlist
+demanddimlist$hour <- c("00:00", "01:00", "02:00", "03:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "20:00", "21:00", "22:00", "23:00")
+dimnames(new_cube) <- demanddimlist
 
 # Define ranges
-firstRange <- newCube[,5:13]
-secondRange <- newCube[,c(14:17, 1:4)]
+firstRange <- new_cube[,5:13] # 10:00-18:00
+secondRange <- new_cube[,c(14:17, 1:4)] # 20:00-3:00
 
 # Calculate the means
 meansFirstRange <- vector()
@@ -203,43 +191,47 @@ hourList1 <- c( "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "
 hourList2 <- c("20:00", "21:00", "22:00", "23:00", "00:00", "01:00", "02:00", "03:00" )
 
 for ( i in hourList1 ) {
-  meansFirstRange[[ i ]] <- mean(firstRange[,i]/length(locationsOnce))
+  meansFirstRange[[ i ]] <- mean(firstRange[,i]/length(locations_list))
 }
 
 for ( i in hourList2 ) {
-  meansSecondRange[[ i ]] <- mean(secondRange[,i]/length(locationsOnce))
+  meansSecondRange[[ i ]] <- mean(secondRange[,i]/length(locations_list))
 }
 
 # Rearrange in new, temporary dataframes
-DF1 <- data.frame ( Hour = hourList1, MeanDemand = meansFirstRange)
-DF2 <- data.frame ( Hour = hourList2, MeanDemand = meansSecondRange)
+DF1 <- data.frame(Hour = hourList1, MeanDemand = meansFirstRange)
+DF1$Hour <- as.numeric(factor(dimnames(firstRange)$hour, levels = hourList1))
 
-DF1$Hour <- factor (dimnames(firstRange)$hour, levels = hourList1)
-DF1$Hour <- as.numeric(DF1$Hour)
+DF2 <- data.frame(Hour = hourList2, MeanDemand = meansSecondRange)
+DF2$Hour <- as.numeric(factor(dimnames(secondRange)$hour, levels = hourList2))
 
-DF2$Hour <- factor (dimnames(secondRange)$hour, levels = hourList2)
-DF2$Hour <- as.numeric(DF2$Hour)
+'Here, we implement the linear regression function instead of: lm(MeanDemand ~ Hour, data = DF1)
+When %*% is matrix multiplication, t() is the transpose, and solve() is the invertible matrix (^-1).'
 
-# Plot regression lines
-U <- data.matrix(data.frame(ones = rep(1, length(DF1$Hour)), hours = DF1$Hour)) # 5*2
-y <- matrix(DF1$MeanDemand) # 5*1
-coef <- t(U) %*% U
+# Plot regression lines - first range
+U1 <- data.matrix(data.frame(ones = rep(1, length(DF1$Hour)), hours = DF1$Hour)) # 5*2
+y1 <- matrix(DF1$MeanDemand) # 5*1
 
+coef1 <- solve((t(U1) %*% U1)) %*% t(U1) %*% y1
 
-LM1 <- lm(MeanDemand ~ Hour, data = DF1)
 print(ggplot(DF1, aes(Hour, MeanDemand), lwd=1, group=1)
       + geom_point(col="blue") 
-      + geom_abline(aes(intercept = coef)[1], slope = coef[2]), lwd=1, show.legend=TRUE, col="gray")
+      + geom_abline(aes(intercept = coef1[1], slope = coef1[2]), lwd=1, show.legend=TRUE, col="gray")
       + scale_x_discrete(limits=hourList1) 
       + theme(legend.position = "bottom", panel.background = element_rect(fill = "beige"))
       + geom_line(show.legend = "TRUE", col="skyblue")
       + ggtitle("Power Demand - Day")
       + labs(y="Demand", x="Time"))
 
-LM2 <- lm(MeanDemand ~ Hour, data = DF2)
+# Plot regression lines - second range
+U2 <- data.matrix(data.frame(ones = rep(1, length(DF2$Hour)), hours = DF2$Hour)) # 5*2
+y2 <- matrix(DF2$MeanDemand) # 5*1
+
+coef2 <- solve((t(U2) %*% U2)) %*% t(U2) %*% y2
+
 print(ggplot(DF2, aes(Hour, MeanDemand), lwd=1, group=1)
       + geom_point(col="blue") 
-      + geom_abline(aes(intercept = coef(LM2)[1], slope = coef(LM2)[2]), lwd=1, show.legend=TRUE, col="gray")
+      + geom_abline(aes(intercept = coef2[1], slope = coef2[2]), lwd=1, show.legend=TRUE, col="gray")
       + scale_x_discrete(limits=hourList2) 
       + theme(legend.position = "bottom", panel.background = element_rect(fill = "beige"))
       + geom_line(show.legend = "TRUE", col="skyblue")
@@ -248,4 +240,6 @@ print(ggplot(DF2, aes(Hour, MeanDemand), lwd=1, group=1)
 
 
 dev.off()
+
+
 
