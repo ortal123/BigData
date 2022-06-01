@@ -210,8 +210,12 @@ DF2$Hour <- as.numeric(factor(dimnames(secondRange)$hour, levels = hourList2))
 When %*% is matrix multiplication, t() is the transpose, and solve() is the invertible matrix (^-1).'
 
 # Plot regression lines - first range
-U1 <- data.matrix(data.frame(ones = rep(1, length(DF1$Hour)), hours = DF1$Hour)) # 5*2
-y1 <- matrix(DF1$MeanDemand) # 5*1
+# 
+# כאשר עשינו רגרסיה עבור כל השעות בין 10:00-18:00 הבחנו שהשעתיים האחרונות נמצאות במגמה שונה משאר השעות
+# ולכן, כמו שגיא הציע, הצגנו קו רגרסיה לטווח 10:00-16:00
+
+U1 <- data.matrix(data.frame(ones = rep(1, length(DF1$Hour) - 2), hours = DF1$Hour[1:(length(DF1$Hour) - 2)])) # 5*2
+y1 <- matrix(DF1$MeanDemand[1:(length(DF1$Hour) - 2)]) # 5*1
 
 coef1 <- solve((t(U1) %*% U1)) %*% t(U1) %*% y1
 
@@ -221,7 +225,7 @@ print(ggplot(DF1, aes(Hour, MeanDemand), lwd=1, group=1)
       + scale_x_discrete(limits=hourList1) 
       + theme(legend.position = "bottom", panel.background = element_rect(fill = "beige"))
       + geom_line(show.legend = "TRUE", col="skyblue")
-      + ggtitle("Power Demand - Day")
+      + ggtitle(paste("Power Demand (10:00-16:00) = ", round(coef1[1], digits=2), round(coef1[2], digits=2), "* Time"))
       + labs(y="Demand", x="Time"))
 
 # Plot regression lines - second range
@@ -236,7 +240,7 @@ print(ggplot(DF2, aes(Hour, MeanDemand), lwd=1, group=1)
       + scale_x_discrete(limits=hourList2) 
       + theme(legend.position = "bottom", panel.background = element_rect(fill = "beige"))
       + geom_line(show.legend = "TRUE", col="skyblue")
-      + ggtitle("Power Demand - Night")
+      + ggtitle(paste("Power Demand (20:00-3:00) = ", round(coef2[1], digits=2), round(coef2[2], digits=2), "* Time)"))
       + labs(y="Demand", x="Time"))
 
 
