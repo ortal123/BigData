@@ -32,12 +32,7 @@ options(digits = 2)
 # Input data
 profiles <- read.csv(file.path('Ex2/data/profiles.csv'), header = TRUE, stringsAsFactors = FALSE)
 str(profiles)
-size <- 60000
-
-
-# Shuffle the data and pick less rows
-profiles <- profiles[sample(1:nrow(profiles)), ]
-profiles <- profiles[1:size,]
+size <- length(rownames(profiles))
 
 
 # Get labels
@@ -139,7 +134,9 @@ df <- cbind(Label = labels, Data = df)
     
 
 # Train the model
+start <- Sys.time()
 trainmodel <- train(df[,-1], df[,1], trControl = cross_validation, method = "rpart")
+Sys.time() - start
 rm(df)
 
 
@@ -150,7 +147,7 @@ confusionMatrix(trainmodel)
 # Remove the batch effect: find and eliminate “male words” and “female words”
 words_identified_by_gender <- list()
 for (word in names(trainmodel$finalModel$variable.importance)) {
-  words_identified_by_gender <- c(words_identified_by_gender, substring(word, 6))
+  words_identified_by_gender <- c(words_identified_by_gender, substring(word, 6)) # remove 'Data.'
 }
 words_identified_by_gender
 
@@ -166,7 +163,6 @@ tf.idf <- t(tf.idf) # transpose
 
 
 # Clean
-rm(all.tokens.dfm)
 rm(tf)
 rm(idf)
 gc()
@@ -194,6 +190,10 @@ for (k in c(2, 3, 4, 10)) {
 
 
 dev.off()
+
+
+# Save data objects
+save(file = 'Ex2/output/Week5_datingNLP.rdata', trainmodel, all.tokens.dfm, pca)
 
 
 
