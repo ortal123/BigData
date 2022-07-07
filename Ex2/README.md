@@ -15,7 +15,7 @@ Naama Shenberger - 211983747
 
 ***
 
-Confusion matrix: (10 fold, repeated 3 times)
+**Confusion matrix:** (10 fold, repeated 3 times)
  
             f  m
 
@@ -27,56 +27,56 @@ Confusion matrix: (10 fold, repeated 3 times)
 
 ***
 
-Training times:
+**Training times:**
 
 1.9 mins (~0.63 mins per repeat)
 
 ***
 
-List of male words and female words:
+**List of male words and female words:**
 
 [[1]]
-[1] "guy"
+"guy"
 
 [[2]]
-[1] "danc"
+"danc"
 
 [[3]]
-[1] "famili"
+"famili"
 
 [[4]]
-[1] "smile"
+"smile"
 
 [[5]]
-[1] "friend"
+"friend"
 
 [[6]]
-[1] "home"
+"home"
 
 [[7]]
-[1] "travel"
+"travel"
 
 [[8]]
-[1] "laugh"
+"laugh"
 
 [[9]]
-[1] "lot"
+"lot"
 
 [[10]]
-[1] "alway"
+"alway"
 
 [[11]]
-[1] "say"
+"say"
 
 ***
 
-Helper variable definitions:
+**Helper variable definitions:**
 
 data.file <- 'Ex2/data/profiles.csv'
 
 ***
 
-The source file activation command:
+**The source file activation command:**
 
 source(‘Ex2/Week5_datingNLP.r')
 
