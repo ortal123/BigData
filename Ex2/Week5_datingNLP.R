@@ -148,7 +148,7 @@ rm(df)
 confusionMatrix(trainmodel)
 
 
-# Remove the batch effect: find and eliminate “male words” and “female words”
+# Remove the batch effect: find and eliminate male words and female words
 words_identified_by_gender <- list()
 for (word in names(trainmodel$finalModel$variable.importance)) {
   words_identified_by_gender <- c(words_identified_by_gender, substring(word, 6)) # remove 'Data.'
@@ -158,7 +158,7 @@ all.tokens.dfm <- as.data.frame(all.tokens.dfm, row.names = NULL, optional = FAL
 all.tokens.dfm <- all.tokens.dfm[,!(names(all.tokens.dfm) %in% words_identified_by_gender)]
 
 
-# Print “male words” and “female words”
+# Print male words and female words
 words_identified_by_gender
 
 
