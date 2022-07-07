@@ -93,7 +93,8 @@ rm(all.tokens)
 
 # Trim some features (because 99.90% of the cells are zeros)
 sparsity(all.tokens.dfm)
-all.tokens.dfm <- dfm_trim(all.tokens.dfm, min_docfreq = 0.5 * size, min_termfreq = 0.9 * size, verbose = TRUE)
+all.tokens.dfm <- dfm_trim(all.tokens.dfm, min_docfreq = 0.2 * size, min_termfreq = 0.2 * size, verbose = TRUE)
+
 
 # Transform to a matrix and inspect
 all.tokens.dfm <- as.matrix(all.tokens.dfm)
@@ -136,6 +137,9 @@ df <- cbind(Label = labels, Data = df)
 # Train the model
 start <- Sys.time()
 trainmodel <- train(df[,-1], df[,1], trControl = cross_validation, method = "rpart")
+
+
+# Training time
 Sys.time() - start
 rm(df)
 
@@ -149,10 +153,13 @@ words_identified_by_gender <- list()
 for (word in names(trainmodel$finalModel$variable.importance)) {
   words_identified_by_gender <- c(words_identified_by_gender, substring(word, 6)) # remove 'Data.'
 }
-words_identified_by_gender
 
 all.tokens.dfm <- as.data.frame(all.tokens.dfm, row.names = NULL, optional = FALSE, make.names = TRUE, headers = FALSE)
 all.tokens.dfm <- all.tokens.dfm[,!(names(all.tokens.dfm) %in% words_identified_by_gender)]
+
+
+# Print “male words” and “female words”
+words_identified_by_gender
 
 
 # Apply TF-IDF on filtered dataframe
