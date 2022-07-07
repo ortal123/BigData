@@ -10,6 +10,7 @@ Ex3 (Hackathon) -
 
 ***
 
-Yudit Halperin, Ortal Calfon (Peretz), Asnat Berlin
+Yudit Halperin, Ortal Calfon (Peretz), Asnat Berlin, Naama Shenberger
+
 
 Bioinformatics, JCT
