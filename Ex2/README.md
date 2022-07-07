@@ -15,17 +15,58 @@ Naama Shenberger - 211983747
 
 ***
 
-Confusion matrix:
+Confusion matrix: (10 fold, repeated 3 times)
+ 
+            f  m
 
+         f 15 11
+
+         m 25 49
+                            
+ Accuracy (average) : 0.6419
 
 ***
 
 Training times:
 
+1.9 mins (~0.63 mins per repeat)
+
 ***
 
 List of male words and female words:
 
+[[1]]
+[1] "guy"
+
+[[2]]
+[1] "danc"
+
+[[3]]
+[1] "famili"
+
+[[4]]
+[1] "smile"
+
+[[5]]
+[1] "friend"
+
+[[6]]
+[1] "home"
+
+[[7]]
+[1] "travel"
+
+[[8]]
+[1] "laugh"
+
+[[9]]
+[1] "lot"
+
+[[10]]
+[1] "alway"
+
+[[11]]
+[1] "say"
 
 ***
 
