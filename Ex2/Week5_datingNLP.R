@@ -6,6 +6,7 @@
 # Yudit Halperin - 324216589
 # Ortal Calfon (Peretz) - 315011189
 # Asnat Berlin - 211825401
+# Naama Shenberger - 211983747
 
 
 
@@ -31,11 +32,12 @@ options(digits = 2)
 # Input data
 profiles <- read.csv(file.path('Ex2/data/profiles.csv'), header = TRUE, stringsAsFactors = FALSE)
 str(profiles)
+size <- 60000
 
 
 # Shuffle the data and pick less rows
 profiles <- profiles[sample(1:nrow(profiles)), ]
-profiles <- profiles[1:500,]
+profiles <- profiles[1:size,]
 
 
 # Get labels
@@ -96,8 +98,7 @@ rm(all.tokens)
 
 # Trim some features (because 99.90% of the cells are zeros)
 sparsity(all.tokens.dfm)
-all.tokens.dfm <- dfm_trim(all.tokens.dfm, min_docfreq = 10, min_termfreq = 20, verbose = TRUE)
-
+all.tokens.dfm <- dfm_trim(all.tokens.dfm, min_docfreq = 0.5 * size, min_termfreq = 0.9 * size, verbose = TRUE)
 
 # Transform to a matrix and inspect
 all.tokens.dfm <- as.matrix(all.tokens.dfm)
