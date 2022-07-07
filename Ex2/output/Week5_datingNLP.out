@@ -1,0 +1,298 @@
+> # Big Data - Exercise 2
+> # GitHub: https://github.com/JuditHalperin/BigData/tree/main/Ex2
+> 
+> # Yudit Halperin - 324216589
+> # Ortal Calfon (Peretz) - 315011189
+> # Asnat Berlin - 211825401
+> # Naama Shenberger - 211983747
+> 
+> 
+> 
+> # Load libraries
+> library(stringr)
+> library(dplyr)
+> library(ggplot2)
+> library(mosaic)
+> library(dplyr)
+> library(stringr)
+> library(xtable)
+> library(gridExtra)
+> library(stopwords)
+> library(quanteda)
+> library(caret)
+> library(rpart)
+> 
+> 
+> # Set rounding to 2 digits
+> options(digits = 2)
+> 
+> 
+> # Input data
+> profiles <- read.csv(file.path('Ex2/data/profiles.csv'), header = TRUE, stringsAsFactors = FALSE)
+> str(profiles)
+'data.frame':	59946 obs. of  31 variables:
+ $ age        : int  22 35 38 23 29 29 32 31 24 37 ...
+ $ status     : chr  "single" "single" "available" "single" ...
+ $ sex        : chr  "m" "m" "m" "m" ...
+ $ orientation: chr  "straight" "straight" "straight" "straight" ...
+ $ body_type  : chr  "a little extra" "average" "thin" "thin" ...
+ $ diet       : chr  "strictly anything" "mostly other" "anything" "vegetarian" ...
+ $ drinks     : chr  "socially" "often" "socially" "socially" ...
+ $ drugs      : chr  "never" "sometimes" "" "" ...
+ $ education  : chr  "working on college/university" "working on space camp" "graduated from masters program" "working on college/university" ...
+ $ ethnicity  : chr  "asian, white" "white" "" "white" ...
+ $ height     : num  75 70 68 71 66 67 65 65 67 65 ...
+ $ income     : int  -1 80000 -1 20000 -1 -1 -1 -1 -1 -1 ...
+ $ job        : chr  "transportation" "hospitality / travel" "" "student" ...
+ $ last_online: chr  "2012-06-28-20-30" "2012-06-29-21-41" "2012-06-27-09-10" "2012-06-28-14-22" ...
+ $ location   : chr  "south san francisco, california" "oakland, california" "san francisco, california" "berkeley, california" ...
+ $ offspring  : chr  "doesn't have kids, but might want them" "doesn't have kids, but might want them" "" "doesn't want kids" ...
+ $ pets       : chr  "likes dogs and likes cats" "likes dogs and likes cats" "has cats" "likes cats" ...
+ $ religion   : chr  "agnosticism and very serious about it" "agnosticism but not too serious about it" "" "" ...
+ $ sign       : chr  "gemini" "cancer" "pisces but it doesn&rsquo;t matter" "pisces" ...
+ $ smokes     : chr  "sometimes" "no" "no" "no" ...
+ $ speaks     : chr  "english" "english (fluently), spanish (poorly), french (poorly)" "english, french, c++" "english, german (poorly)" ...
+ $ essay0     : chr  "about me:  i would love to think that i was some some kind of intellectual: either the dumbest smart guy, or th"| __truncated__ "i am a chef: this is what that means. 1. i am a workaholic. 2. i love to cook regardless of whether i am at wor"| __truncated__ "i'm not ashamed of much, but writing public text on an online dating site makes me pleasantly uncomfortable. i'"| __truncated__ "i work in a library and go to school. . ." ...
+ $ essay1     : chr  "currently working as an international agent for a freight forwarding company. import, export, domestic you know"| __truncated__ "dedicating everyday to being an unbelievable badass." "i make nerdy software for musicians, artists, and experimenters to indulge in their own weirdness, but i like t"| __truncated__ "reading things written by old dead people" ...
+ $ essay2     : chr  "making people laugh. ranting about a good salting. finding simplicity in complexity, and complexity in simplicity." "being silly. having ridiculous amonts of fun wherever. being a smart ass. ohh and i can cook. ;)" "improvising in different contexts. alternating between being present and decidedly outside of a moment, or tryi"| __truncated__ "playing synthesizers and organizing books according to the library of congress classification system" ...
+ $ essay3     : chr  "the way i look. i am a six foot half asian, half caucasian mutt. it makes it tough not to notice me, and for me to blend in." "" "my large jaw and large glasses are the physical things people comment on the most. when sufficiently stimulated"| __truncated__ "socially awkward but i do my best" ...
+ $ essay4     : chr  "books: absurdistan, the republic, of mice and men (only book that made me want to cry), catcher in the rye, the"| __truncated__ "i am die hard christopher moore fan. i don't really watch a lot of tv unless there is humor involved. i am kind"| __truncated__ "okay this is where the cultural matrix gets so specific, it's like being in the crosshairs.  for what it's wort"| __truncated__ "bataille, celine, beckett. . . lynch, jarmusch, r.w. fassbender. . . twin peaks & fishing w/ john joy division,"| __truncated__ ...
+ $ essay5     : chr  "food. water. cell phone. shelter." "delicious porkness in all of its glories. my big ass doughboy's sinking into 15 new inches. my overly resilient"| __truncated__ "movement conversation creation contemplation touch humor" "" ...
+ $ essay6     : chr  "duality and humorous things" "" "" "cats and german philosophy" ...
+ $ essay7     : chr  "trying to find someone to hang out with. i am down for anything except a club." "" "viewing. listening. dancing. talking. drinking. performing." "" ...
+ $ essay8     : chr  "i am new to california and looking for someone to wisper my secrets to." "i am very open and will share just about anything." "when i was five years old, i was known as \"the boogerman\"." "" ...
+ $ essay9     : chr  "you want to be swept off your feet! you are tired of the norm. you want to catch a coffee or a bite. or if you "| __truncated__ "" "you are bright, open, intense, silly, ironic, critical, caring, generous, looking for an exploration, rather th"| __truncated__ "you feel so inclined." ...
+> size <- length(rownames(profiles))
+> 
+> 
+> # Get labels
+> labels <- profiles$sex
+> 
+> 
+> # Output file
+> pdf(file.path('Ex2/output/Week5_dating.pdf'))
+> 
+> 
+> # Combine the essays of each profile into one paragraph
+> essays <- select(profiles, starts_with("essay"))
+> essays <- apply(essays, MARGIN = 1, FUN = paste, collapse = " ")
+> 
+> 
+> # Clean
+> rm(profiles)
+> gc()
+          used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 3.3e+06  177    7.4e+06  397  7.2e+06  384
+Vcells 2.2e+07  170    7.0e+07  537  9.5e+07  726
+> 
+> 
+> # Remove HTML characters
+> html <- c( "<a[^>]+>", "class=[\"'][^\"']+[\"']", "&[a-z]+;", "\n", "\\n", "<br ?/>", "</[a-z]+ ?>" )
+> html.pat <- paste0( "(", paste(html, collapse = "|"), ")" )
+> essays <- str_replace_all(essays, html.pat, " ")
+> 
+> 
+> # Remove stop-words
+> stop.words <-  c( "a", "am", "an", "and", "as", "at", "are", "be", "but", "can", "do", "for", "have", "i'm", "if", "in", "is", "it", "like", "love", "my", "of", "on", "or", "so", "that", "the", "to", "with", "you", "i" )
+> stop.words.pat <- paste0( "\\b(", paste(stop.words, collapse = "|"), ")\\b" )
+> essays <- str_replace_all(essays, stop.words.pat, " ")
+> 
+> 
+> # Tokenize essay texts
+> all.tokens <- tokens(essays, what = "word", remove_numbers = TRUE, remove_punct = TRUE, remove_symbols = TRUE, remove_hyphens = TRUE)
+Warning message:
+remove_hyphens argument is not used. 
+> rm(essays)
+> 
+> 
+> # Lower case the tokens
+> all.tokens <- tokens_tolower(all.tokens)
+> 
+> 
+> # Use quanteda's built-in stopword list for English
+> all.tokens <- tokens_select(all.tokens, stopwords(), selection = "remove")
+> 
+> 
+> # Perform stemming on the tokens
+> all.tokens <- tokens_wordstem(all.tokens, language = "english")
+> 
+> 
+> # remove single-word tokens after stemming (meaningless)
+> all.tokens <- tokens_select(all.tokens, "^[a-z]$", selection = "remove", valuetype = "regex")
+> 
+> 
+> # Create a bag-of-words model = document-term frequency matrix
+> all.tokens.dfm <- dfm(all.tokens, tolower = FALSE)
+> rm(all.tokens)
+> 
+> 
+> # Trim some features (because 99.90% of the cells are zeros)
+> sparsity(all.tokens.dfm)
+[1] 1
+> all.tokens.dfm <- dfm_trim(all.tokens.dfm, min_docfreq = 0.2 * size, min_termfreq = 0.2 * size, verbose = TRUE)
+Removing features occurring: 
+  - fewer than 11989 times: 153,400
+  - in fewer than 11989 documents: 153,449
+  Total features removed: 153,449 (99.9%).
+> 
+> 
+> # Transform to a matrix and inspect
+> all.tokens.dfm <- as.matrix(all.tokens.dfm)
+> dim(all.tokens.dfm)
+[1] 59946   108
+> 
+> 
+> # TF-IDF functions
+> tf_function <- function(row) { row / (sum(row) + 1) }
+> idf_function <- function(column) { log10(length(column) / length(which(column > 0))) }
+> tf_idf_function <- function(tf, idf) { tf * idf }
+> 
+> 
+> # Apply TF-IDF
+> tf <- apply(all.tokens.dfm, 1, tf_function)
+> idf <- apply(all.tokens.dfm, 2, idf_function)
+> tf.idf <- apply(tf, 2, tf_idf_function, idf = idf)
+> tf.idf <- t(tf.idf) # transpose
+> 
+> 
+> # Clean
+> rm(tf)
+> rm(idf)
+> gc()
+          used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 3.3e+06  174    7.4e+06  397  7.2e+06  384
+Vcells 2.0e+07  153    6.5e+07  496  9.5e+07  726
+> 
+> 
+> # Convert matrix to dataframe
+> df <- as.data.frame(tf.idf, row.names = NULL, optional = FALSE, make.names = TRUE)
+> names(df) <- make.names(names(df), unique = TRUE) 
+> 
+> 
+> # 10-fold cross validation 3 times
+> # we use trainControl instead of createMultiFolds(df, k = 10, times = 3)
+> cross_validation <- trainControl(method = "repeatedcv", number = 10, repeats = 3)
+> 
+> 
+> # Add labels of male / female to the DFM data frame
+> df <- cbind(Label = labels, Data = df)
+>     
+> 
+> # Train the model
+> start <- Sys.time()
+> trainmodel <- train(df[,-1], df[,1], trControl = cross_validation, method = "rpart")
+> 
+> 
+> # Training time
+> Sys.time() - start
+Time difference of 1.9 mins
+> rm(df)
+> 
+> 
+> # Test the model by calculating a confusion matrix
+> confusionMatrix(trainmodel)
+Cross-Validated (10 fold, repeated 3 times) Confusion Matrix 
+
+(entries are percentual average cell counts across resamples)
+ 
+          Reference
+Prediction  f  m
+         f 15 11
+         m 25 49
+                            
+ Accuracy (average) : 0.6419
+
+> 
+> 
+> # Remove the batch effect: find and eliminate “male words” and “female words”
+> words_identified_by_gender <- list()
+> for (word in names(trainmodel$finalModel$variable.importance)) {
++   words_identified_by_gender <- c(words_identified_by_gender, substring(word, 6)) # remove 'Data.'
++ }
+> 
+> all.tokens.dfm <- as.data.frame(all.tokens.dfm, row.names = NULL, optional = FALSE, make.names = TRUE, headers = FALSE)
+> all.tokens.dfm <- all.tokens.dfm[,!(names(all.tokens.dfm) %in% words_identified_by_gender)]
+> 
+> 
+> # Print “male words” and “female words”
+> words_identified_by_gender
+[[1]]
+[1] "guy"
+
+[[2]]
+[1] "danc"
+
+[[3]]
+[1] "famili"
+
+[[4]]
+[1] "smile"
+
+[[5]]
+[1] "friend"
+
+[[6]]
+[1] "home"
+
+[[7]]
+[1] "travel"
+
+[[8]]
+[1] "laugh"
+
+[[9]]
+[1] "lot"
+
+[[10]]
+[1] "alway"
+
+[[11]]
+[1] "say"
+
+> 
+> 
+> # Apply TF-IDF on filtered dataframe
+> tf <- apply(all.tokens.dfm, 1, tf_function)
+> idf <- apply(all.tokens.dfm, 2, idf_function)
+> tf.idf <- apply(tf, 2, tf_idf_function, idf = idf)
+> tf.idf <- t(tf.idf) # transpose
+> 
+> 
+> # Clean
+> rm(tf)
+> rm(idf)
+> gc()
+          used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 3.3e+06  174    7.4e+06  397  7.4e+06  397
+Vcells 3.3e+07  250    7.8e+07  596  9.5e+07  726
+> 
+> 
+> # Calculate PCA
+> pca <- prcomp(tf.idf)
+> pca.data <- data.frame(Sample = rownames(pca$x), X = pca$x[,1], Y = pca$x[,2])
+> pca.var <- pca$sdev ^ 2
+> pca.var.per <- round(pca.var / sum(pca.var) * 100, 1)
+> 
+> 
+> # Cluster the applicants to 2,3,4 and 10 clusters using Kmeans
+> colors <- paste0("cluster #", 1:10)
+> 
+> for (k in c(2, 3, 4, 10)) {
++   
++   clusters <- kmeans(tf.idf, k)
++   
++   print(ggplot(data = pca.data, aes(x = X, y = Y, label = Sample ,colour = colors[clusters$cluster])) +
++           geom_point() + theme_bw() + ggtitle(paste0("Kmeans: K = ", k)) +
++           theme(legend.position = "bottom", panel.background = element_rect(fill = "grey")) +
++           xlab(paste0("PC1 (", pca.var.per[1], "%)")) + ylab(paste0("PC2 (", pca.var.per[2], "%)")))
++ }
+> 
+> 
+> dev.off()
+null device 
+          1 
+> 
+> 
+> # Save data objects
+> save(file = 'Ex2/output/Week5_datingNLP.rdata', trainmodel, all.tokens.dfm, pca)
+> 
