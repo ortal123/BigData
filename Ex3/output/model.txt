@@ -1,0 +1,52 @@
+# Big Data - Exercise 3 (Hackathon)
+# GitHub: https://github.com/JuditHalperin/BigData/tree/main/Ex3
+
+# Yudit Halperin - 324216589
+# Ortal Calfon (Peretz) - 315011189
+# Asnat Berlin - 211825401
+# Naama Shenberger - 211983747
+
+# Date: 07.22
+# Database name   BX_db
+
+5) link to model.rdata <URL string>
+https://drive.google.com/drive/folders/ujovn4yKdLIVg0uQO-E02NPCjSHBl1
+
+6.a) RMSE of the full model UB <number>, IB <number>
+6.b) histogram of RMSE <table(bin, num occurrences UBCF, num occurrences IBCF)>
+RMSE
+      N.UBCF   N.IBCF
+0.0   NNNN     NNNN
+0.25  NNNN     NNNN
+0.5   NNNN     NNNN
+0.75  NNNN     NNNN
+1.0   NNNN     NNNN
+1.25  NNNN     NNNN
+1.5   NNNN     NNNN
+1.75  NNNN     NNNN
+2.0   NNNN     NNNN
+2.25  NNNN     NNNN
+2.5   NNNN     NNNN
+...
+6.c) Top-10 recommendations   <table(user,book1,book2,book3, ..., book10)>
+UBCF
+user
+       book1  book2  book3  book4  book5  book6  book7  book8  book9  book10
+26     XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
+55331  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
+18     XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
+6201   XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
+5010   XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
+60     XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
+...
+
+IBCF
+user
+       book1  book2  book3  book4  book5  book6  book7  book8  book9  book10
+26     XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
+55331  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
+18     XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
+6201   XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
+5010   XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
+60     XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
+...

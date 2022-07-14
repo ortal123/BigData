@@ -1,0 +1,54 @@
+# Big Data - Exercise 3 (Hackathon)
+# GitHub: https://github.com/JuditHalperin/BigData/tree/main/Ex3
+
+# Yudit Halperin - 324216589
+# Ortal Calfon (Peretz) - 315011189
+# Asnat Berlin - 211825401
+# Naama Shenberger - 211983747
+
+# Date: 07.22
+# Database name   BX_db
+
+3.a) how many users?      <number>
+3.b) how many books?      <number>
+3.c) how many ratings?    <number>
+3.d) histogram of user-ratings <table(num ratings, num users)>
+     (how many users have rated N times? <number>)
++-----+-------+
+| bin | N     |
++-----+-------+
+|   1 | XXXXX |
+|   2 | XXXXX |
+|   3 | XXXXX |
+|   4 | XXXXX |
+|   5 | XXXXX |
+|   6 | XXXXX |
+|   7 | XXXXX |
+|   8 | XXXXX |
+...
+3.e) histogram of book-ratings <table(num ratings, num users)>
+     (how many books have been rated N times? <number>)
++-----+-------+
+| bin | N     |
++-----+-------+
+|   1 | XXXXX |
+|   2 | XXXXX |
+|   3 | XXXXX |
+|   4 | XXXXX |
+|   5 | XXXXX |
+|   6 | XXXXX |
+|   7 | XXXXX |
+|   8 | XXXXX |
+...
+3.f) top-10 rated books?    <table(name,num ratings)>
++----------+-------+
+| name     | N     |
++----------+-------+
+| Catch 22 | XXXXX |
+...
+3.g) top-10 active users?   <table(name, num ratings)>
++-------+-------+
+| name  | N     |
++-------+-------+
+|   226 | XXXXX |
+...
