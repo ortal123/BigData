@@ -6,7 +6,7 @@ Ex1 - data warehouse and multidimensional linear regression analysis.
 
 Ex2 - NLP (text processing) and clustering.
 
-Ex3 (Hackathon) -
+Ex3 (Hackathon) - recommendation system using SQL and R.
 
 ***
 
