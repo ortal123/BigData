@@ -9,22 +9,22 @@
 # Date: 07.22
 # Database name   BX_db
 
-3.a) how many users?      <number>
-3.b) how many books?      <number>
-3.c) how many ratings?    <number>
+3.a) how many users?  278858 
+3.b) how many books?  270551    
+3.c) how many ratings? 1144626
 3.d) histogram of user-ratings <table(num ratings, num users)>
      (how many users have rated N times? <number>)
 +-----+-------+
 | bin | N     |
 +-----+-------+
-|   1 | XXXXX |
-|   2 | XXXXX |
-|   3 | XXXXX |
-|   4 | XXXXX |
-|   5 | XXXXX |
-|   6 | XXXXX |
-|   7 | XXXXX |
-|   8 | XXXXX |
+|   1 | 210 |
+|   2 | 173 |
+|   3 | 164 |
+|   4 | 146 |
+|   5 | 149 |
+|   6 | 166 |
+|   7 | 130 |
+|   8 | 118 |
 ...
 3.e) histogram of book-ratings <table(num ratings, num users)>
      (how many books have been rated N times? <number>)
