@@ -1,0 +1,11 @@
+Book_Title	count(Book_Rating)
+Wild Animus	2502
+The Lovely Bones: A Novel	1295
+The Da Vinci Code	883
+Divine Secrets of the Ya-Ya Sisterhood: A Novel	732
+The Red Tent (Bestselling Backlist)	723
+A Painted House	647
+The Secret Life of Bees	615
+Snow Falling on Cedars	614
+Angels &amp; Demons	586
+Where the Heart Is (Oprah's Book Club (Paperback))	585
