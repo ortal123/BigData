@@ -34,24 +34,50 @@ https://github.com/JuditHalperin/BigData/blob/main/Ex3/output/user_ratings_3d.cs
 +-----+-------+
 | bin | N     |
 +-----+-------+
-|   1 | XXXXX |
-|   2 | XXXXX |
-|   3 | XXXXX |
-|   4 | XXXXX |
-|   5 | XXXXX |
-|   6 | XXXXX |
-|   7 | XXXXX |
-|   8 | XXXXX |
+|   1 | 157 |
+|   2 | 137 |
+|   3 | 116 |
+|   4 | 114 |
+|   5 | 138 |
+|   6 | 119 |
+|   7 | 109 |
+|   8 | 96 |
 ...
+full table attached in:
+https://github.com/JuditHalperin/BigData/blob/main/Ex3/output/book_ratings_3e.csv
 3.f) top-10 rated books?    <table(name,num ratings)>
-+----------+-------+
-| name     | N     |
-+----------+-------+
-| Catch 22 | XXXXX |
-...
+
++----------+-------+----------+-------+----------+----------+
+|               name                                 | N    |
++----------+-------+----------+-------+----------+----------+
+| Wild Animus                                        | 2502 |
+| The Lovely Bones: A Nove                           | 1295 |
+| The Da Vinci Code                                  | 883  |
+| Divine Secrets of the Ya-Ya Sisterhood: A Novel    | 732  |
+| The Red Tent (Bestselling Backlist)                | 723  |
+| A Painted House	                                 | 647  |
+| The Secret Life of Bees                            | 615  |
+| Snow Falling on Cedars                             | 614  | 
+| Angels &amp; Demons	                            | 586  |
+| Where the Heart Is (Oprah's Book Club (Paperback)) |	585  |
+
+table attached in:
+https://github.com/JuditHalperin/BigData/blob/main/Ex3/output/Top_10_rated_books_3f.txt
 3.g) top-10 active users?   <table(name, num ratings)>
+
 +-------+-------+
 | name  | N     |
 +-------+-------+
-|   226 | XXXXX |
-...
+| 11676  | 13549 |
+| 198711 | 7521  |
+| 153662 | 6095  |
+| 98391  | 5876  |
+| 35859  | 5828  |
+| 212898 | 4766  |
+| 278418 | 4510  |
+| 76352  | 3356  |
+| 110973 | 3090  |
+| 235105 | 3056  |
+
+table attached in:
+https://github.com/JuditHalperin/BigData/blob/main/Ex3/output/Top_10_active_users_3g.txt
