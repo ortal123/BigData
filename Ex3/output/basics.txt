@@ -26,6 +26,9 @@
 |   7 | 130 |
 |   8 | 118 |
 ...
+full table attached in:
+https://github.com/JuditHalperin/BigData/blob/main/Ex3/output/user_ratings_3d.csv
+
 3.e) histogram of book-ratings <table(num ratings, num users)>
      (how many books have been rated N times? <number>)
 +-----+-------+
