@@ -24,7 +24,7 @@ tables <- dbListTables(mydb)
 dbSendQuery(mydb, "SET GLOBAL local_infile = true;")
 
 
-# Put all ratings into a dataframe
+# Create ratings dataframe
 ratings <- dbGetQuery(mydb, "select * from `bx_book_ratings` b where b.`Book_Rating` > 0 and b.`Book_Rating` <= 10 and `ISBN` REGEXP '^[A-Za-z0-9]+$'")
 print(head(ratings))
 
@@ -76,7 +76,7 @@ rm(books)
 gc()
 
 
-# 5 fold cross validation sets for training and testing data
+# 5-fold cross validation sets for training (80%) and testing (20%) data
 eval_sets <- evaluationScheme(data = bmatrix, method = "cross-validation", train = 0.8, given = -1, goodRating = 6, k = 5)
 
 
@@ -231,7 +231,7 @@ df_ubcf <- as.data.frame(x = accuracy_ubcf)
 
 
 # Plot histogram for ubcf
-ggplot(df_ubcf, aes(x = accuracy_ubcf)) + geom_histogram(color = "darkblue", fill = "blue") + ggtitle("UBCF RMSE Histogram") + labs(y = "bin", x = "RMSE")
+ggplot(df_ubcf, aes(x = accuracy_ubcf)) + geom_histogram(color = "darkgreen", fill = "green") + ggtitle("UBCF - RMSE Histogram") + labs(y = "Bin", x = "RMSE")
 
 
 # Histogram for text file
@@ -240,11 +240,11 @@ hist_ubcf <- hist(x = as.numeric(df_ubcf$accuracy_ubcf), plot = FALSE)
 
 # Convert data to dataframe
 accuracy_ibcf <- eval_accuracy_ibcf[,1]
-df_ibcf <- as.data.frame(x=accuracy_ibcf)
+df_ibcf <- as.data.frame(x = accuracy_ibcf)
 
 
 # Plot histogram for ibcf
-ggplot(df_ibcf, aes(x = accuracy_ibcf)) + geom_histogram(color = "darkblue", fill = "blue") + ggtitle("IBCF RMSE Histogram") + labs(y = "bin", x = "RMSE")
+ggplot(df_ibcf, aes(x = accuracy_ibcf)) + geom_histogram(color = "darkgreen", fill = "green") + ggtitle("IBCF - RMSE Histogram") + labs(y = "Bin", x = "RMSE")
 
 
 # Histogram for text file
@@ -328,6 +328,10 @@ print("ubcf recomendations")
 print(ubcf_recommended)
 
 
+# Save to csv
+write.csv(ubcf_recommended, "Ex3/output/ubcf_recomendations.csv")
+
+
 # ibcf recommendations
 top_ten_ibcf_predict <- predict(eval_recommender_ibcf, newdata = getData(eval_sets, "known")[1:279], n = items_to_recommend)
 top_ten_ibcf_predict<-as(top_ten_ibcf_predict, "list")
@@ -350,6 +354,10 @@ colnames(ibcf_recommended) <- paste0('book ', 1:10)
 # Print ibcf recomendation
 print("ibcf recomendations")
 print(ibcf_recommended)
+
+
+# Save to csv
+write.csv(ibcf_recommended, "Ex3/output/ibcf_recomendations.csv")
 
 
 # Back up data for text file
