@@ -9,44 +9,37 @@
 # Date: 07.22
 # Database name   BX_db
 
+
 5) link to model.rdata
 https://github.com/JuditHalperin/BigData/blob/main/Ex3/output/model.rdata
 
-6.a) RMSE of the full model UB <number>, IB <number>
-6.b) histogram of RMSE <table(bin, num occurrences UBCF, num occurrences IBCF)>
+6.a) RMSE of the full model:
+UB: 2.285312
+IB: 2.167511
+
+6.b) histogram of RMSE 
 RMSE
-      N.UBCF   N.IBCF
-0.0   NNNN     NNNN
-0.25  NNNN     NNNN
-0.5   NNNN     NNNN
-0.75  NNNN     NNNN
-1.0   NNNN     NNNN
-1.25  NNNN     NNNN
-1.5   NNNN     NNNN
-1.75  NNNN     NNNN
-2.0   NNNN     NNNN
-2.25  NNNN     NNNN
-2.5   NNNN     NNNN
-...
-6.c) Top-10 recommendations   <table(user,book1,book2,book3, ..., book10)>
+
+    N.UBCF N.IBCF
+0.5     72     60
+1.5     51     23
+2.5     32     14
+3.5     16      9
+4.5      7      2
+5.5      2      1
+6.5      0      0
+7.5      1      1
+8.5      0     NA
+9.5      2     NA
+
+6.c) Top-10 recommendations  
+
 UBCF
-user
-       book1  book2  book3  book4  book5  book6  book7  book8  book9  book10
-26     XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
-55331  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
-18     XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
-6201   XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
-5010   XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
-60     XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
-...
+
+
+
+
+
 
 IBCF
-user
-       book1  book2  book3  book4  book5  book6  book7  book8  book9  book10
-26     XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
-55331  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
-18     XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
-6201   XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
-5010   XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
-60     XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX  XXXXX
-...
+
