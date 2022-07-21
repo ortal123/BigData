@@ -9,8 +9,8 @@
 # Date: 07.22
 # Database name   BX_db
 
-5) link to model.rdata <URL string>
-https://drive.google.com/drive/folders/ujovn4yKdLIVg0uQO-E02NPCjSHBl1
+5) link to model.rdata
+https://github.com/JuditHalperin/BigData/blob/main/Ex3/output/model.rdata
 
 6.a) RMSE of the full model UB <number>, IB <number>
 6.b) histogram of RMSE <table(bin, num occurrences UBCF, num occurrences IBCF)>
