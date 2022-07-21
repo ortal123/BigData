@@ -35,11 +35,9 @@ RMSE
 6.c) Top-10 recommendations  
 
 UBCF
-
-
-
-
+See full result at: https://github.com/JuditHalperin/BigData/tree/main/Ex3/output/ubcf_recomendations.csv
 
 
 IBCF
+See full result at: https://github.com/JuditHalperin/BigData/tree/main/Ex3/output/ibcf_recomendations.csv
 
