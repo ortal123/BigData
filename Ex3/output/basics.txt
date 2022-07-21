@@ -12,8 +12,8 @@
 3.a) how many users?  278858 
 3.b) how many books?  270551    
 3.c) how many ratings? 1144626
-3.d) histogram of user-ratings <table(num ratings, num users)>
-     (how many users have rated N times? <number>)
+3.d) histogram of user-ratings
+
 +-----+-------+
 | bin | N     |
 +-----+-------+
@@ -26,11 +26,12 @@
 |   7 | 130 |
 |   8 | 118 |
 ...
+
 full table attached in:
 https://github.com/JuditHalperin/BigData/blob/main/Ex3/output/user_ratings_3d.csv
 
-3.e) histogram of book-ratings <table(num ratings, num users)>
-     (how many books have been rated N times? <number>)
+3.e) histogram of book-ratings 
+
 +-----+-------+
 | bin | N     |
 +-----+-------+
@@ -43,9 +44,11 @@ https://github.com/JuditHalperin/BigData/blob/main/Ex3/output/user_ratings_3d.cs
 |   7 | 109 |
 |   8 | 96 |
 ...
+
 full table attached in:
 https://github.com/JuditHalperin/BigData/blob/main/Ex3/output/book_ratings_3e.csv
-3.f) top-10 rated books?    <table(name,num ratings)>
+
+3.f) top-10 rated books?   
 
 +----------+-------+----------+-------+----------+----------+
 |               name                                 | N    |
@@ -63,7 +66,8 @@ https://github.com/JuditHalperin/BigData/blob/main/Ex3/output/book_ratings_3e.cs
 
 table attached in:
 https://github.com/JuditHalperin/BigData/blob/main/Ex3/output/Top_10_rated_books_3f.txt
-3.g) top-10 active users?   <table(name, num ratings)>
+
+3.g) top-10 active users? 
 
 +-------+-------+
 | name  | N     |
