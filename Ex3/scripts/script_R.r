@@ -20,7 +20,7 @@ library(qpcR)
 
 
 # Connect to the MYSQL database
-mydb <- dbConnect(MySQL(), user = 'root', password = 'Yeuda0522', dbname = 'bx_db', host = 'localhost')
+mydb <- dbConnect(MySQL(), user = 'root', password = '', dbname = 'bx_db', host = 'localhost')
 tables <- dbListTables(mydb)
 dbSendQuery(mydb, "SET GLOBAL local_infile = true;")
 
