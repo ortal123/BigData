@@ -1,4 +1,5 @@
 
+
 # Big Data - Exercise 3 (Hackathon)
 # GitHub: https://github.com/JuditHalperin/BigData/tree/main/Ex3
 
@@ -26,7 +27,6 @@ dbSendQuery(mydb, "SET GLOBAL local_infile = true;")
 
 # Create ratings dataframe
 ratings <- dbGetQuery(mydb, "select * from `bx_book_ratings` b where b.`Book_Rating` > 0 and b.`Book_Rating` <= 10 and `ISBN` REGEXP '^[A-Za-z0-9]+$'")
-print(head(ratings))
 
 
 # Remove the RMySQL package to use the sqldf package
@@ -54,12 +54,6 @@ books <- sqldf("SELECT * FROM books b GROUP BY b.`Book_Title`, b.`Book_Author`, 
 # Remove ratings that contain people or books that were removed
 ratings <- sqldf("SELECT * FROM ratings  where `ISBN` in (select `ISBN` from books) and `User_ID` in (select `User_ID` from people)")
 print(dim(ratings))
-
-
-# Print dataframes head
-print(head(ratings))
-print(head(books))
-print(head(people))
 
 
 # Convert ratings into realRatingMatrix
@@ -251,7 +245,7 @@ ggplot(df_ibcf, aes(x = accuracy_ibcf)) + geom_histogram(color = "darkgreen", fi
 hist_ibcf <- hist(x = as.numeric(df_ibcf$accuracy_ibcf), plot = FALSE)
 
 
-# RMSE histogram
+# RMSE histogram (6.b)
 rmse_hist <- as.data.frame(row.names=as.character( hist_ubcf$mids), qpcR:::cbind.na( hist_ubcf$counts,hist_ibcf$counts))
 colnames(rmse_hist) <- c("N.UBCF", "N.IBCF")
 print(rmse_hist)
